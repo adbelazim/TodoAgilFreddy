@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+    <h:body>
+        <ui:composition template="/template/commonTemplate.xhtml">
+            <ui:define name="content">
+                <h1>Panel</h1>
+                <p>
+                    En esta página se puede visualizar el estado global de todos los tableros y tareas en los que se encuentra trabajando. 
+                </p>
+                <h:form id="formBuscarDatos">
+                    <p:growl id="message" showDetail="true"/>
+                    <p:commandButton value="Actualizar Datos" action="#{escritorioManagedBean.buscarDatos()}"
+                                     update=":formEscritorio, :formBuscarDatos:message"
+                                     title="Obtiene los datos actualizados de los tableros de las cuentas asociadas."/>
+                    <p:ajaxStatus style="width:16px;height:16px;float: left" id="ajaxStatusPanel">
+                        <f:facet name="start">
+                            <h:graphicImage value="/resources/img/ajax-loader.gif" />
+                        </f:facet>
+                    </p:ajaxStatus>
+                </h:form><br/><br/>
+                
+                <h:form id="formEscritorio">
+                    <p:dashboard id="escritorio" model="#{escritorioManagedBean.model}">
+                        <p:panel id="proyectos" header="Mis tableros" style="margin: 20px; width: 600px">
+                            <p:dataTable var="proyecto" value="#{escritorioManagedBean.equipos}">
+                                <p:column headerText="Nombre">
+                                    <h:outputLabel value="#{proyecto.idTablero.nombreTablero}" />
+                                </p:column>
+                                <p:column headerText="Cuenta" width="20%">
+                                    <h:outputLabel value="#{proyecto.idCuenta.idTipoCuenta.nombreTipoCuenta}" />
+                                </p:column>
+                                <p:column headerText="Tiempo">
+                                    <h:outputLabel value="#{escritorioManagedBean.obtenerTiempoProyecto(proyecto.idTablero.nombreTablero)}" />
+                                </p:column>
+                            </p:dataTable>
+                        </p:panel>
+                        
+                        <p:panel id="tareas" header="Mis tareas en curso" style="margin: 20px; width: 600px">
+                            <p:dataTable var="tareas" value="#{escritorioManagedBean.tarjetas}">
+                                <p:column headerText="Proyecto">
+                                    <h:outputLabel value="#{tareas.idTablero.nombreTablero}" />
+                                </p:column>
+                                <p:column headerText="Nombre">
+                                    <h:outputLabel value="#{tareas.nombreTarjeta}" />
+                                </p:column>
+                                <p:column headerText="Etapa">
+                                    <h:outputLabel value="#{tareas.idLista.nombreLista}" />
+                                </p:column>
+                                <p:column headerText="Inicio">
+                                    <h:outputLabel value="#{escritorioManagedBean.formatFecha(tareas.fechaInicioTarjeta)}" />
+                                </p:column>
+                                <p:column headerText="Tiempo en proceso">
+                                    <h:outputLabel escape="false" value="#{escritorioManagedBean.obtenerTiempo(tareas.fechaInicioTarjeta)}" />
+                                </p:column>
+                            </p:dataTable>
+                        </p:panel>
+                        
+                        <p:panel id="grafTareas" header="Cantidad de tareas" style="margin: 20px; width: 480px">
+                            <p:chart type="pie" model="#{escritorioManagedBean.pieResumenTareas}" style="width:450px;height:300px" />
+                        </p:panel>
+                        
+                        <p:panel id="grafHorasTareas" header="Tiempos de Tareas" style="margin: 20px; width: 480px">
+                            <p:chart type="pie" model="#{escritorioManagedBean.pieResumenHorasTareas}" style="width:450px;height:300px" />
+                        </p:panel>
+                    </p:dashboard>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

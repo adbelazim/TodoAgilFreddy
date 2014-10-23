@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:f="http://xmlns.jcp.org/jsf/core">
+	
+	<h:body>
+            <ui:composition>
+                <h:form>
+                    <p:menubar>
+                        <p:menuitem value="Panel" icon="ui-icon-home" url="/faces/global/index.xhtml" />
+                        <p:menuitem value="Tableros" icon="ui-icon-calculator" url="/faces/tableros/tableros.xhtml"/>
+                        
+                        <p:submenu rendered="#{sesionManagedBean.checkUserAlumno()}" label="Reportes">
+                            <p:menuitem value="Mis Tableros" url="/faces/reportes/graficos.xhtml"/>
+                            <p:menuitem value="Trabajo Semanal" url="/faces/reportes/trabajoSemanal.xhtml"/>
+                        </p:submenu>
+                        
+                        <p:submenu rendered="#{sesionManagedBean.checkUserAdminAndProfesor()}" label="Reportes">
+                            <p:menuitem value="Mis Tableros" url="/faces/reportes/graficos.xhtml"/>
+                            <p:menuitem value="Asignaturas" url="/faces/reportes/graficosAsignaturas.xhtml" />
+                            <p:menuitem value="Trabajo Semanal" url="/faces/reportes/trabajoSemanal.xhtml"/>
+                        </p:submenu>
+                        
+                        <p:menuitem rendered="#{sesionManagedBean.checkUserAdminAndProfesor()}" value="Créditos"
+                                    url="/faces/creditos/resumen.xhtml"/>
+                        
+                        <p:submenu label="Configuración" icon="ui-icon-wrench">
+                            <p:menuitem rendered="#{sesionManagedBean.checkUserAdmin()}"
+                                        value="Usuarios" url="/faces/conf/usuarios.xhtml"/>
+                            <p:menuitem rendered="#{sesionManagedBean.checkUserAdminAndProfesor()}" 
+                                        value="Asignaturas" url="/faces/conf/asignaturas.xhtml" />
+                            <p:menuitem value="Asociar Cuentas" url="/faces/conf/cuentas.xhtml" />
+                        </p:submenu>
+                        <f:facet name="options">
+                            <h:panelGrid columns="2">
+                                <h:outputLabel value="Hola #{sesionManagedBean.username}" />
+                                <h:commandButton action="#{sesionManagedBean.logout()}" value="Cerrar Sesión" />                            
+                            </h:panelGrid>
+                        </f:facet>
+                    </p:menubar>				 
+                </h:form>
+            </ui:composition>
+	</h:body>
+	
+</html>

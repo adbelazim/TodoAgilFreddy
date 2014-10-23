@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+    <h:body>
+        <ui:composition template="/template/commonTemplate.xhtml">
+            <ui:define name="content">
+                <h1>Reportes Asignaturas</h1>                               
+                
+                <p>
+                    En esta página se pueden visualizar todos los gráficos Burndown para los tableros de los grupos de las asignaturas creadas.<br/>
+                    Los tableros tienen el siguiente formato "Nombre Asignatura" - "Nombre Sprint" - "Nombre Grupo" - "Nombre Tablero".<br/>
+                    Seleccione el tablero y presion el botón "Mostrar".
+                </p>
+                
+                <h:form id="formGraficos">
+                    <p:panel>
+                        <h:panelGrid columns="3">
+                            <h:outputLabel value="Tableros" />
+                            <p:selectOneMenu value="#{graficosAsignaturaManagedBean.idTableroSeleccionado}">
+                                <f:selectItems value="#{graficosAsignaturaManagedBean.tableros}" var="tablero"
+                                               itemValue="#{tablero.idTablero}" itemLabel="#{tablero.idSprintGrupo.idSprintAsignatura.idAsignatura.nombreAsignatura} -
+                             #{tablero.idSprintGrupo.idSprintAsignatura.nombreSprintAsignatura} -
+                             #{tablero.idSprintGrupo.nombreSprintGrupo} - #{tablero.nombreTablero}" />
+                            </p:selectOneMenu>
+                            <p:commandButton value="Mostrar" ajax="true" action="#{graficosAsignaturaManagedBean.crearGraficos()}" update="chart"/>
+                        </h:panelGrid>
+                    </p:panel>
+                    <p:panel header="Gráfico Burndown">
+                        <p:chart id="chart" type="line" style="height:300px;" model="#{graficosAsignaturaManagedBean.lineChartModel}"/>
+                    </p:panel>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:f="http://xmlns.jcp.org/jsf/core">    
+    <body>
+        <ui:composition template="/template/commonTemplate.xhtml">            
+            <ui:define name="content">
+                <h1>Tableros</h1>
+                
+                <p>
+                    En esta página se pueden visualizar los tableros agregados al sistema.
+                    Para agregar nuevos tableos presione el botón "Agregar Tableros".<br/>
+                    * Para visualizar los tableros de Trello, estos deben ser definidos como públicos.
+                </p>
+                
+                <p:button value="Agregar Tableros" outcome="/tableros/agregarTableros"/>
+                <br/><br/> 
+                <h:form id="formVerTableros">
+                    <p:tabView orientation="left" value="#{verTablerosManagedBean.equipos}" var="equipo">
+                        <p:tab title="#{equipo.idCuenta.idTipoCuenta.nombreTipoCuenta} - #{equipo.idTablero.nombreTablero}">
+                            <iframe src="#{equipo.idTablero.urlTablero}" width="100%" height="800px" style="border:0"/>
+                        </p:tab>
+                    </p:tabView>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

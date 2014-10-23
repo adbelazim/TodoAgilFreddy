@@ -1,0 +1,15 @@
+cl/usach/managedbeans/TableroManagedBean.class
+cl/usach/managedbeans/RolUsuarioManagedBean.class
+cl/usach/managedbeans/CuentaManagedBean.class
+cl/usach/managedbeans/SesionManagedBean.class
+cl/usach/converter/UsuarioConverter.class
+cl/usach/managedbeans/AsignaturaManagedBean.class
+cl/usach/managedbeans/EscritorioManagedBean.class
+cl/usach/managedbeans/GraficoManagedBean.class
+cl/usach/managedbeans/VerTablerosManagedBean.class
+cl/usach/converter/CodSHA.class
+util/Semana.class
+cl/usach/managedbeans/CreditosManagedBean.class
+cl/usach/managedbeans/TrabajoSemanalManagedBean.class
+cl/usach/managedbeans/UsuarioManagedBean.class
+cl/usach/managedbeans/GraficosAsignaturaManagedBean.class

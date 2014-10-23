@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:f="http://xmlns.jcp.org/jsf/core">    
+    <body>
+        <ui:composition template="/template/commonTemplate.xhtml">
+            <ui:define name="content">
+                <h1>Agregar Tableros</h1>               
+                <p>
+                    En esta página puede administrar los tableros que desea agregar al sistema. 
+                    Se pueden extraer, agregar y eliminar tableros. Además se puede asignar asignaturas a tableros (en caso de ser Scrum Master).
+                </p>
+                <h:form id="formAgregarTablero">
+                    
+                    <p:commandButton style="float: left" id="buscarTableros" action="#{tableroManagedBean.buscarTableros()}" 
+                                     value="Extraer" update="formAgregarTablero:dataTableTableros"
+                                     title="Extraer los tableros que estan asignados a sus cuentas asociadas."/>
+                    <p:ajaxStatus style="width:16px;height:16px;float: left" id="ajaxStatusPanel">
+                        <f:facet name="start">
+                            <h:graphicImage value="/resources/img/ajax-loader.gif" />
+                        </f:facet>
+                        <f:facet name="complete">
+                            <h:outputText value="" />
+                        </f:facet>
+                    </p:ajaxStatus>
+                    <br/><br/>
+                    <p:growl id="messages" showDetail="true"/> 
+                    
+                    <p:dataTable id="dataTableTableros" var="equipo" value="#{tableroManagedBean.equipos}" editable="true">
+                        <p:column headerText="Cuenta" width="10%">
+                            <h:outputLabel value="#{equipo.idCuenta.idTipoCuenta.nombreTipoCuenta}" />
+                        </p:column>
+                        <p:column headerText="Email Cuenta" width="15%">
+                            <h:outputLabel value="#{equipo.idCuenta.emailCuenta}" />
+                        </p:column>
+                        <p:column headerText="Nombre" width="10%">
+                            <h:outputLabel value="#{equipo.idTablero.nombreTablero}" />
+                        </p:column>
+                        <p:column headerText="Asignatura" width="20%">
+                            <h:outputLabel value="#{tableroManagedBean.buscarAsignatura(equipo)}" />
+                        </p:column>
+                        <p:column headerText="Estado" width="7%">
+                            <p:graphicImage rendered="#{tableroManagedBean.existeEquipo(equipo)}"
+                                            value="/resources/img/258-checkmark.png" title="Agregado"/>
+                            <p:graphicImage rendered="#{!tableroManagedBean.existeEquipo(equipo)}"
+                                            value="/resources/img/298-circlex.png" title="No agregado" />
+                        </p:column>
+                        <p:column width="20%">
+                            <p:commandButton rendered="#{!tableroManagedBean.existeEquipo(equipo)}" value="Agregar Tablero" 
+                                             type="submit" action="#{tableroManagedBean.nuevoTablero}" title="Agregar tablero a la aplicación."
+                                             update=":formAgregarTablero:messages,:formAgregarTablero:dataTableTableros">
+                                <f:setPropertyActionListener value="#{equipo}" target="#{tableroManagedBean.equipoSeleccionado}" />
+                            </p:commandButton>
+                            <p:commandButton rendered="#{tableroManagedBean.existeEquipo(equipo)}" value="Eliminar Tablero" 
+                                             type="submit" action="#{tableroManagedBean.eliminarTablero()}" title="Eliminar tablero agreado de la aplicación."
+                                             update=":formAgregarTablero:messages,:formAgregarTablero">
+                                <f:setPropertyActionListener value="#{equipo}" target="#{tableroManagedBean.equipoSeleccionado}" />
+                                <p:confirm header="Eliminar Tablero" message="¿Esta seguro de eliminar este tablero?" icon="ui-icon-alert"/>
+                            </p:commandButton>
+                            <p:commandButton rendered="#{tableroManagedBean.verificarTableroyScrumMaster(equipo)}" value="Asignar Asignatura" update=":formAsignarAsignaturas"
+                                             type="submit" oncomplete="PF('dlgAsignarAsignatura').show();" title="Si eres Scrum Master de un grupo puedes asociar este tablero a ese grupo."
+                                             action="#{tableroManagedBean.buscarTableroReal()}">
+                                <f:setPropertyActionListener value="#{equipo}" target="#{tableroManagedBean.equipoSeleccionado}"/>
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                    
+                    <p:confirmDialog global="true">  
+                        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>  
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>       
+                    </p:confirmDialog>
+                </h:form>
+                
+                <p:dialog header="Asignar Asignaturas" widgetVar="dlgAsignarAsignatura" modal="true" resizable="false">
+                    <h:form id="formAsignarAsignaturas">
+                        <h2><p:outputLabel value="#{tableroManagedBean.equipoSeleccionado.idTablero.nombreTablero}" /></h2>
+                        <p:selectOneMenu value="#{tableroManagedBean.idSprintGrupoSeleccionado}">
+                            <f:selectItem itemLabel="Sin Asignar" itemValue="-1"/>
+                            <f:selectItems value="#{tableroManagedBean.buscarSprintsGruposPorUsuario()}" var="sg"
+                                           itemValue="#{sg.idSprintGrupo}"
+                                           itemLabel="#{sg.idSprintAsignatura.idAsignatura.nombreAsignatura} / #{sg.idSprintAsignatura.nombreSprintAsignatura} / #{sg.nombreSprintGrupo}"/>
+                        </p:selectOneMenu>
+                        <br/><br/>
+                        <p:commandButton value="Asignar" oncomplete="PF('dlgAsignarAsignatura').hide();"
+                                         action="#{tableroManagedBean.asignarAsignatura(tableroManagedBean.equipoSeleccionado)}" update=":formAgregarTablero"/>
+                        <p:commandButton value="Cancelar" oncomplete="PF('dlgAsignarAsignatura').hide();"/>
+                    </h:form>
+                </p:dialog>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
